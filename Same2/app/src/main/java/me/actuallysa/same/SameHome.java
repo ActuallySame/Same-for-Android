@@ -1,18 +1,30 @@
 package me.actuallysa.same;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -24,14 +36,10 @@ public class SameHome extends AppCompatActivity {
     Uri fileUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_same_home);
 
-        WebView myWebView = (WebView) findViewById(R.id.webview);
-        myWebView.setWebViewClient(new WebViewClient());
-        WebSettings webSettings = myWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        myWebView.loadUrl("http://facebook.com");
+        setContentView(R.layout.activity_same_home);
 
         if (Environment.MEDIA_MOUNTED.equals(Environment
                 .getExternalStorageState())) {
@@ -42,6 +50,30 @@ public class SameHome extends AppCompatActivity {
         } else {
             Log.e(getPackageName(), "Media is not writeable");
         }
+
+
+        SpannableString s = new SpannableString("same.");
+        s.setSpan(new TypefaceCustomFont(this, "UNICORN.TTF"), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Update the action bar title with the me.actuallysa.same.TypefaceCustomFont instance
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(s);
+
+        ImageButton capturebtn = (ImageButton) findViewById(R.id.capture);
+        Typeface font = Typeface.createFromAsset(getAssets(), "UNICORN.TTF");
+
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        int height = size.y/10;
+        Log.d("====", String.valueOf(height) + " same " + String.valueOf(size.y));
+        capturebtn.setMinimumHeight(height);
+
+        WebView myWebView = (WebView) findViewById(R.id.webview);
+        myWebView.setWebViewClient(new WebViewClient());
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        myWebView.loadUrl("http://actuallysa.me");
     }
 
     public void startCamera(View view){
